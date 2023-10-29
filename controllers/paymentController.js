@@ -1,11 +1,21 @@
 const { CartItem } = require("../models/cartItem");
+const { Order } = require("../models/order");
+const { Payment } = require("../models/payment");
 const { Profile } = require("../models/profile");
 const PaymentSession = require("ssl-commerz-node").PaymentSession;
 
-module.exports.ipn = async (req,res) =>{
-    console.log(req.body);
-}
-
+module.exports.ipn = async (req, res) => {
+  const payment = new Payment(req.body);
+  const tran_id = payment["tran_id"];
+  if(payment["status"] === "VALID"){
+    const order = await Order.updateOne({transaction_id:tran_id},{status:"Complete"});
+    await CartItem.deleteMany(order.cartItems)
+  }else{
+    await Order.deleteOne({transaction_id:tran_id})
+  }
+  await payment.save();
+  return res.status(200).send('IPN');
+};
 
 module.exports.initPayment = async (req, res) => {
   const userId = req.user._id;
@@ -14,13 +24,12 @@ module.exports.initPayment = async (req, res) => {
 
   const { address1, address2, city, state, postcode, country, phone } = profile;
 
-
-
   const total_amount = cartItems
     .map((item) => item.count * item.price)
     .reduce((a, b) => a + b, 0);
-  const total_item = cartItems.map(item => item.count).reduce((a,b)=>a+b) ;
-
+  const total_item = cartItems
+    .map((item) => item.count)
+    .reduce((a, b) => a + b);
 
   const tran_id =
     "_" + Math.random().toString(36).substring(2, 9) + new Date().getTime();
@@ -71,7 +80,7 @@ module.exports.initPayment = async (req, res) => {
     city: city,
     state: state,
     postcode: postcode,
-    country: country
+    country: country,
   });
 
   // Set Product Profile
@@ -82,6 +91,15 @@ module.exports.initPayment = async (req, res) => {
   });
 
   const response = await payment.paymentInit();
-
+  let order = new Order({
+    cartItem: cartItems,
+    user: userId,
+    transaction_id: tran_id,
+    adress: profile,
+  });
+  if(response.status === "SUCCESS"){
+    order.sessionKey = response["sessionkey"]; 
+    order.save();
+  }
   return res.status(200).send(response);
 };
