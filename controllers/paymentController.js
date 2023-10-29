@@ -8,7 +8,7 @@ module.exports.ipn = async (req, res) => {
   const payment = new Payment(req.body);
   const tran_id = payment["tran_id"];
   if(payment["status"] === "VALID"){
-    const order = await Order.updateOne({transaction_id:tran_id},{status:"Complete"});
+    const order = await Order.updateOne({transaction_id:tran_id},{status:"complete"});
     await CartItem.deleteMany(order.cartItems)
   }else{
     await Order.deleteOne({transaction_id:tran_id})
