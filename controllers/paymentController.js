@@ -32,7 +32,7 @@ module.exports.initPayment = async (req, res) => {
     .reduce((a, b) => a + b);
 
   const tran_id =
-    "_" + Math.random().toString(36).substring(2, 9) + new Date().getTime();
+    "_" + Math.random().toString(36).substring(2, 9) + (new Date()).getTime();
 
   const payment = new PaymentSession(
     true,
