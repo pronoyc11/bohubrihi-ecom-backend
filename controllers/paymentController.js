@@ -94,9 +94,10 @@ module.exports.initPayment = async (req, res) => {
   let order = new Order({
     cartItem: cartItems,
     user: userId,
-    transaction_id: tran_id,
+    transanction_id: tran_id,
     adress: profile,
   });
+  
   if(response.status === "SUCCESS"){
     order.sessionKey = response["sessionkey"]; 
     order.save();
