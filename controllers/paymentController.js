@@ -29,7 +29,7 @@ module.exports.initPayment = async (req, res) => {
     .reduce((a, b) => a + b, 0);
   const total_item = cartItems
     .map((item) => item.count)
-    .reduce((a, b) => a + b);
+    .reduce((a, b) => a + b,0);
 
   const tran_id =
     "_" + Math.random().toString(36).substring(2, 9) + (new Date()).getTime();
