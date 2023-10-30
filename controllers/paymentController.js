@@ -3,7 +3,7 @@ const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
 const { Profile } = require("../models/profile");
 const PaymentSession = require("ssl-commerz-node").PaymentSession;
-
+const path = require("path");
 module.exports.ipn = async (req, res) => {
   const payment = new Payment(req.body);
   const tran_id = payment["tran_id"];
@@ -42,7 +42,7 @@ module.exports.initPayment = async (req, res) => {
 
   // Set the urls
   payment.setUrls({
-    success: "yoursite.com/success", // If payment Succeed
+    success: "https://bohubrihi-ecom-backend.onrender.com/api/payment/success", // If payment Succeed
     fail: "yoursite.com/fail", // If payment failed
     cancel: "yoursite.com/cancel", // If user cancel payment
     ipn: "https://bohubrihi-ecom-backend.onrender.com/api/payment/ipn", // SSLCommerz will send http post request in this link
@@ -104,3 +104,7 @@ module.exports.initPayment = async (req, res) => {
   }
   return res.status(200).send(response);
 };
+
+module.exports.paymentSuccess = async (req,res) =>{
+res.sendFile(path.join(__basedir + "public/success.html"));
+}
