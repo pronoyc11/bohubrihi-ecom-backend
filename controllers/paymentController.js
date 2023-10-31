@@ -17,7 +17,7 @@ module.exports.ipn = async (req, res) => {
       cartItems: 1,
       user: 1,
     });
-console.log(orders);
+console.log(orders.cartItems);
     await CartItem.deleteMany(order.cartItems);
     //Here gose all additional operation for assignment
   } else {
