@@ -13,11 +13,8 @@ module.exports.ipn = async (req, res) => {
       { status: "complete" }
     );
 
-    const orders = await Order.find({ transanction_id: tran_id }).select({
-      cartItems: 1,
-      user: 1,
-    });
-console.log(orders.cartItems);
+    const orders = await Order.find({ transanction_id: tran_id });
+console.log(orders);
     await CartItem.deleteMany(order.cartItems);
     //Here gose all additional operation for assignment
   } else {
