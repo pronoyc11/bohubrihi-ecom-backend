@@ -7,22 +7,24 @@ const path = require("path");
 module.exports.ipn = async (req, res) => {
   const payment = new Payment(req.body);
   const tran_id = payment["tran_id"];
-  if(payment["status"] === "VALID"){
-    const order = await Order.updateOne({transanction_id:tran_id},{status:"complete"});
-    
- ;
-    console.log(order);
-    
-    await CartItem.deleteMany(order.cartItems)
+  if (payment["status"] === "VALID") {
+    const order = await Order.updateOne(
+      { transanction_id: tran_id },
+      { status: "complete" }
+    );
+
+    const orders = Order.findOne({ transaction_id: tran_id }).select({
+      cartItems: 1,
+      user: 1,
+    });
+console.log(orders);
+    await CartItem.deleteMany(order.cartItems);
     //Here gose all additional operation for assignment
-
-
-
-  }else{
-    await Order.deleteOne({transaction_id:tran_id})
+  } else {
+    await Order.deleteOne({ transaction_id: tran_id });
   }
   await payment.save();
-  return res.status(200).send('IPN');
+  return res.status(200).send("IPN");
 };
 
 module.exports.initPayment = async (req, res) => {
@@ -37,10 +39,10 @@ module.exports.initPayment = async (req, res) => {
     .reduce((a, b) => a + b, 0);
   const total_item = cartItems
     .map((item) => item.count)
-    .reduce((a, b) => a + b,0);
+    .reduce((a, b) => a + b, 0);
 
   const tran_id =
-    "_" + Math.random().toString(36).substring(2, 9) + (new Date()).getTime();
+    "_" + Math.random().toString(36).substring(2, 9) + new Date().getTime();
 
   const payment = new PaymentSession(
     true,
@@ -105,14 +107,14 @@ module.exports.initPayment = async (req, res) => {
     transanction_id: tran_id,
     adress: profile,
   });
-  
-  if(response.status === "SUCCESS"){
-    order.sessionKey = response["sessionkey"]; 
+
+  if (response.status === "SUCCESS") {
+    order.sessionKey = response["sessionkey"];
     order.save();
   }
   return res.status(200).send(response);
 };
 
-module.exports.paymentSuccess = async (req,res) =>{
-res.sendFile(path.join(__basedir + "/public/success.html"));
-}
+module.exports.paymentSuccess = async (req, res) => {
+  res.sendFile(path.join(__basedir + "/public/success.html"));
+};
