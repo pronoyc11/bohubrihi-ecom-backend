@@ -85,7 +85,7 @@ console.log(fields);
     }
   });
 };
-
+//GET PRODUCTS FUNCTION STARTS HERE
 module.exports.getProducts = async (req, res) => {
   //QUERY STRING
 
@@ -96,10 +96,12 @@ module.exports.getProducts = async (req, res) => {
     .select({ photo: 0, description: 0 })
     .populate("category", "name")
     .limit(limit)
-    .sort({ [sortBy]: order });
+    .sort({ [sortBy]: order })
+    
 
   return res.status(200).send(products);
 };
+//GET PRODUCTS FUNCTION ENDS HERE
 
 module.exports.getProductById = async (req, res) => {
   const productId = req.params.id;
@@ -206,7 +208,7 @@ const body = {
   },
 };
 module.exports.filterProducts = async (req, res) => {
-  console.log("This is filter");
+  
   let order = req.body.order === "desc" ? -1 : 1;
   let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
   let limit = req.body.limit ? parseInt(req.body.limit) : 10;

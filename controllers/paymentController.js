@@ -10,6 +10,11 @@ module.exports.ipn = async (req, res) => {
   if(payment["status"] === "VALID"){
     const order = await Order.updateOne({transanction_id:tran_id},{status:"complete"});
     await CartItem.deleteMany(order.cartItems)
+    //Here gose all additional operation for assignment
+    const count = order.cartItems ;
+    console.log(count);
+
+
   }else{
     await Order.deleteOne({transaction_id:tran_id})
   }
