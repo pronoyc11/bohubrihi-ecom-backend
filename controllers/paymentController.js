@@ -13,7 +13,7 @@ module.exports.ipn = async (req, res) => {
       { status: "complete" }
     );
 
-    const orders = await Order.findOne({ transaction_id: tran_id }).select({
+    const orders = await Order.find({ transaction_id: tran_id }).select({
       cartItems: 1,
       user: 1,
     });
