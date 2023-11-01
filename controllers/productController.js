@@ -2,6 +2,7 @@ const _ = require("lodash");
 const formidable = require("formidable");
 const fs = require("fs");
 const { validateProduct, Product } = require("../models/product");
+const { Order } = require("../models/order");
 
 module.exports.createProduct = async (req, res) => {
 
@@ -88,6 +89,7 @@ console.log(fields);
 //GET PRODUCTS FUNCTION STARTS HERE
 module.exports.getProducts = async (req, res) => {
   //QUERY STRING
+
 
   let order = req.query.order === "desc" ? -1 : 1;
   let sortBy = req.query.sortBy ? req.query.sortBy : "_id";

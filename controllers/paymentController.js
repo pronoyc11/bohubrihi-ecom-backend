@@ -15,7 +15,7 @@ module.exports.ipn = async (req, res) => {
 
     const orders = await Order.find({ transanction_id: tran_id });
 console.log(orders);
-    await CartItem.deleteMany(order.cartItems);
+    // await CartItem.deleteMany(order.cartItems);
     //Here gose all additional operation for assignment
   } else {
     await Order.deleteOne({ transaction_id: tran_id });
