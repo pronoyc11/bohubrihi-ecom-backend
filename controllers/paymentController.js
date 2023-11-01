@@ -54,21 +54,21 @@ if(bps){
     
       if(!bps.products.includes(item._id)){
       bpsArr.push(item._id);
-     console.log("Milenai reeeee")
+    
       }
-    
-    
- 
+
    }else{
     //create bought products arr
+    console.log(bpsArr);
     bpsArr.push(item._id);
+    console.log("it's pushing!")
    }
   });
   //Final touch for bps
   if(bps){
     await BoughtProducts.findOneAndUpdate({user:boughtUserId},{products:[...bpsArr]}) ;
   }else{
-    const newBp = new BoughtProducts({user:boughtUserId,products:bpsArr});
+    const newBp = new BoughtProducts({user:boughtUserId,products:[...bpsArr]});
     await newBp.save();
   }
 
