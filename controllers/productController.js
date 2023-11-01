@@ -3,6 +3,7 @@ const formidable = require("formidable");
 const fs = require("fs");
 const { validateProduct, Product } = require("../models/product");
 const { Order } = require("../models/order");
+const { BoughtProducts } = require("../models/boughtProducts");
 
 module.exports.createProduct = async (req, res) => {
 
@@ -90,7 +91,69 @@ console.log(fields);
 module.exports.getProducts = async (req, res) => {
   //QUERY STRING
 
+  //asssignment starts
+//  const orders = await Order.find({transanction_id:"_nxgyau91698818307103"}).select({cartItems:1,user:1});
+//  const boughtUserId = orders[0].user ;
+//    const productIdAndCount = [];
+//   const productId = [];
+// orders[0].cartItems.forEach(item=>{
+//   productIdAndCount.push({id:item.product._id,count:item.count});
+//   productId.push(item.product._id);
+//   })
+//   const productss = await Product.find({_id:[...productId]}).select({photo:0,description:0});
+ 
+// for(let j = 0;j<productss.length;j++){
+//   for(let i = 0 ;i < productIdAndCount.length; i++){
+    
+//     if(productIdAndCount[i].id.toString() === productss[j]._id.toString()){
+//       productss[j].sold += productIdAndCount[i].count 
+      
+//       productss[j].quantity -= productIdAndCount[i].count
+    
+//     }
+//   }
+// }
+// productss.forEach(async (item)=>{
+//  await Product.findByIdAndUpdate(item._id,item);
+// })
+//assignment ends
+//console.log(orders);
 
+
+// const bps = await BoughtProducts.findOne({user:boughtUserId}); 
+// let bpsArr = [] ;
+// if(bps){
+//   bpsArr = bps.products ;
+// }
+// //HAVING BOUGHT PRODUCTS END 
+//   productss.forEach(async (item)=>{
+  
+//    //Update or create BoughtProducts
+//    //boughtUserId,[item._id]
+//    if(bps){
+//     //update bought products
+    
+//       if(!bps.products.includes(item._id)){
+//       bpsArr.push(item._id);
+//      console.log("Milenai reeeee")
+//       }
+    
+    
+ 
+//    }else{
+//     //create bought products arr
+//     bpsArr.push(item._id);
+//    }
+//   });
+//   //Final touch for bps
+//   if(bps){
+//     await BoughtProducts.findOneAndUpdate({user:boughtUserId},{products:[...bpsArr]}) ;
+//   }else{
+//     const newBp = new BoughtProducts({user:boughtUserId,products:bpsArr});
+//     await newBp.save();
+//   }
+
+  //TESTING ENDS
   let order = req.query.order === "desc" ? -1 : 1;
   let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
   let limit = req.query.limit ? parseInt(req.query.limit) : 10;

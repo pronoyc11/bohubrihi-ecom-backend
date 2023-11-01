@@ -1,6 +1,8 @@
+const { BoughtProducts } = require("../models/boughtProducts");
 const { CartItem } = require("../models/cartItem");
 const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
+const { Product } = require("../models/product");
 const { Profile } = require("../models/profile");
 const PaymentSession = require("ssl-commerz-node").PaymentSession;
 const path = require("path");
@@ -15,8 +17,62 @@ module.exports.ipn = async (req, res) => {
      await CartItem.deleteMany(order.cartItems);
     //Here gose all additional operation for assignment
     
-    const orders = await Order.find({ transanction_id: tran_id }).select({cartItems:1,user:1});
-console.log(orders);
+    const orders = await Order.find({transanction_id:tran_id}).select({cartItems:1,user:1});
+    const productIdAndCount = [];
+    const productId = [];
+    const boughtUserId = orders[0].user ;
+  orders[0].cartItems.forEach(item=>{
+    productIdAndCount.push({id:item.product._id,count:item.count});
+    productId.push(item.product._id);
+    })
+    const productss = await Product.find({_id:[...productId]}).select({photo:0,description:0});
+   
+  for(let j = 0;j<productss.length;j++){
+    for(let i = 0 ;i < productIdAndCount.length; i++){
+      
+      if(productIdAndCount[i].id.toString() === productss[j]._id.toString()){
+        productss[j].sold += productIdAndCount[i].count 
+        
+        productss[j].quantity -= productIdAndCount[i].count
+      
+      }
+    }
+  }
+//HAVING BOUGHT PRODUCTS START
+const bps = await BoughtProducts.findOne({user:boughtUserId}); 
+let bpsArr = [] ;
+if(bps){
+  bpsArr = bps.products ;
+}
+//HAVING BOUGHT PRODUCTS END 
+  productss.forEach(async (item)=>{
+    await Product.findByIdAndUpdate(item._id,item);
+   //Update or create BoughtProducts
+   //boughtUserId,[item._id]
+   if(bps){
+    //update bought products
+    
+      if(!bps.products.includes(item._id)){
+      bpsArr.push(item._id);
+     console.log("Milenai reeeee")
+      }
+    
+    
+ 
+   }else{
+    //create bought products arr
+    bpsArr.push(item._id);
+   }
+  });
+  //Final touch for bps
+  if(bps){
+    await BoughtProducts.findOneAndUpdate({user:boughtUserId},{products:[...bpsArr]}) ;
+  }else{
+    const newBp = new BoughtProducts({user:boughtUserId,products:bpsArr});
+    await newBp.save();
+  }
+
+  //ADDITIONAL ASSIGNMENT OPERATION ENDS HERE
   } else {
     await Order.deleteOne({ transaction_id: tran_id });
   }
