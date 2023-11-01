@@ -12,11 +12,11 @@ module.exports.ipn = async (req, res) => {
       { transanction_id: tran_id },
       { status: "complete" }
     );
-
-    const orders = await Order.find({ transanction_id: tran_id });
-console.log(orders);
-    // await CartItem.deleteMany(order.cartItems);
+     await CartItem.deleteMany(order.cartItems);
     //Here gose all additional operation for assignment
+    
+    const orders = await Order.find({ transanction_id: tran_id }).select({cartItems:1,user:1});
+console.log(orders);
   } else {
     await Order.deleteOne({ transaction_id: tran_id });
   }
@@ -99,7 +99,7 @@ module.exports.initPayment = async (req, res) => {
 
   const response = await payment.paymentInit();
   let order = new Order({
-    cartItem: cartItems,
+    cartItems: cartItems,
     user: userId,
     transanction_id: tran_id,
     adress: profile,
