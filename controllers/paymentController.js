@@ -47,23 +47,27 @@ if(bps){
 //HAVING BOUGHT PRODUCTS END 
   productss.forEach(async (item)=>{
     await Product.findByIdAndUpdate(item._id,item);
+  });
+
+  //order cartItems adding to bought
+  order.cartItems.forEach(item=>{
    //Update or create BoughtProducts
    //boughtUserId,[item._id]
    if(bps){
     //update bought products
     
-      if(!bps.products.includes(item._id)){
-      bpsArr.push(item._id);
+      if(!bps.products.includes(item.product)){
+      bpsArr.push(item.product);
     
       }
 
    }else{
     //create bought products arr
-    console.log(bpsArr);
-    bpsArr.push(item._id);
-    console.log("it's pushing!")
+ 
+    bpsArr.push(item.product);
+  
    }
-  });
+  })
   //Final touch for bps
   if(bps){
     await BoughtProducts.findOneAndUpdate({user:boughtUserId},{products:[...bpsArr]}) ;
