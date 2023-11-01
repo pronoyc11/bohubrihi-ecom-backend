@@ -50,21 +50,21 @@ if(bps){
   });
 
   //order cartItems adding to bought
-  order.cartItems.forEach(item=>{
+  orders[0].cartItems.forEach(item=>{
    //Update or create BoughtProducts
    //boughtUserId,[item._id]
    if(bps){
     //update bought products
     
-      if(!bps.products.includes(item.product)){
-      bpsArr.push(item.product);
+      if(!bps.products.includes(item.product._id)){
+      bpsArr.push(item.product._id);
     
       }
 
    }else{
     //create bought products arr
  
-    bpsArr.push(item.product);
+    bpsArr.push(item.product._id);
   
    }
   })
