@@ -164,7 +164,13 @@ module.exports.getProducts = async (req, res) => {
 
 
 
-
+// const orders = await Order.findOneAndUpdate(
+//   { transanction_id: "_kzsoijt1698927481472" },
+//   { status: "complete" },
+  
+// )
+// console.log(orders)
+ //await CartItem.deleteMany(order.cartItems);
 
 
 

@@ -18,9 +18,10 @@ let response = await axios.get(`https://sandbox.sslcommerz.com/validator/api/val
 let sslStatus = response.data["status"]; 
 //validation ends
   if (sslStatus === "VALID" || sslStatus === "VALIDATED") {
-    const order = await Order.updateOne(
+    const order = await Order.findOneAndUpdate(
       { transanction_id: tran_id },
-      { status: "complete" }
+      { status: "complete" },
+      {new:true}
     );
      await CartItem.deleteMany(order.cartItems);
     //Here gose all additional operation for assignment
