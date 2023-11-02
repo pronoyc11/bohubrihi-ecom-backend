@@ -9,7 +9,14 @@ const path = require("path");
 module.exports.ipn = async (req, res) => {
   const payment = new Payment(req.body);
   const tran_id = payment["tran_id"];
-  if (payment["status"] === "VALID") {
+  //validation starts
+  let val_id = payment["val_id"] ;         //"2311011857491SQ84DQcpjmxoXg";
+
+let response = await axios.get(`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=abc653cf3571418c&store_passwd=abc653cf3571418c@ssl`)
+      
+let sslStatus = response.data["status"]; 
+//validation ends
+  if (sslStatus === "VALID" || sslStatus === "VALIDATED") {
     const order = await Order.updateOne(
       { transanction_id: tran_id },
       { status: "complete" }

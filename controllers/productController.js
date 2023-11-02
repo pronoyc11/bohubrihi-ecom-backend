@@ -4,6 +4,7 @@ const fs = require("fs");
 const { validateProduct, Product } = require("../models/product");
 const { Order } = require("../models/order");
 const { BoughtProducts } = require("../models/boughtProducts");
+const { default: axios } = require("axios");
 
 module.exports.createProduct = async (req, res) => {
 
@@ -154,14 +155,34 @@ module.exports.getProducts = async (req, res) => {
 //   }
 
   //TESTING ENDS
+let val_id = "2311011857491SQ84DQcpjmxoXg";
+
+let response = await axios.get(`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=abc653cf3571418c&store_passwd=abc653cf3571418c@ssl`)
+      
+console.log(response.data["status"]); 
+
+
+
+
+
+
+
+
+
+
+
+
+
   let order = req.query.order === "desc" ? -1 : 1;
   let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
   let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+  let skip = req.query.skip? parseInt(req.query.skip) : 0 ;
   const products = await Product.find()
     .select({ photo: 0, description: 0 })
     .populate("category", "name")
     .limit(limit)
     .sort({ [sortBy]: order })
+    .skip(skip)
     
 
   return res.status(200).send(products);

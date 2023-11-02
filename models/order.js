@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const { CartItemSchema } = require("./cartItem");
 
+
 module.exports.Order = model(
   "Order",
   Schema({
@@ -23,6 +24,7 @@ module.exports.Order = model(
         default:"pending",
         enum:["pending","complete"]
     },
+    time:{type:Date,def:new Date()},
     user : {
         type:Schema.Types.ObjectId,
         ref:'User'
