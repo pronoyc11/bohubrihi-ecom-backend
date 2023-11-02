@@ -12,7 +12,7 @@ module.exports.ipn = async (req, res) => {
   const tran_id = payment["tran_id"];
   //validation starts
   let val_id = payment["val_id"] ;         //"2311011857491SQ84DQcpjmxoXg";
-  const amount = payment["amount"];
+ 
 let response = await axios.get(`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=abc653cf3571418c&store_passwd=abc653cf3571418c@ssl`)
       
 let sslStatus = response.data["status"]; 
@@ -20,8 +20,8 @@ let sslStatus = response.data["status"];
   if (sslStatus === "VALID" || sslStatus === "VALIDATED") {
     const order = await Order.findOneAndUpdate(
       { transanction_id: tran_id },
-      { status: "complete",ammount:amount },
-      {new:true}
+      { status: "complete" }
+      
     
     );
      await CartItem.deleteMany({user:order.user});
@@ -179,6 +179,7 @@ module.exports.initPayment = async (req, res) => {
     user: userId,
     transanction_id: tran_id,
     adress: profile,
+    ammount:countAmmount
   });
 
   if (response.status === "SUCCESS") {
