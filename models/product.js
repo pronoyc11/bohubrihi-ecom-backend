@@ -29,10 +29,11 @@ module.exports.Product = model(
           postedBy: { type: Schema.Types.ObjectId, ref: "User" },
         },
       ],
-      comment: [
+      comments: [
         {
           comment: String,
           postedBy: { type: Schema.Types.ObjectId, ref: "User" },
+          name:String
         },
       ],
       totalRating:{

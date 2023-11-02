@@ -110,8 +110,8 @@ module.exports.initPayment = async (req, res) => {
   // Set the urls
   payment.setUrls({
     success: "https://bohubrihi-ecom-backend.onrender.com/api/payment/success", // If payment Succeed
-    fail: "yoursite.com/fail", // If payment failed
-    cancel: "yoursite.com/cancel", // If user cancel payment
+    fail: "https://bohubrihi-ecom-backend.onrender.com/api/payment/failed", // If payment failed
+    cancel: "https://bohubrihi-ecom-backend.onrender.com/api/payment/cancled", // If user cancel payment
     ipn: "https://bohubrihi-ecom-backend.onrender.com/api/payment/ipn", // SSLCommerz will send http post request in this link
   });
 
@@ -174,4 +174,10 @@ module.exports.initPayment = async (req, res) => {
 
 module.exports.paymentSuccess = async (req, res) => {
   res.sendFile(path.join(__basedir + "/public/success.html"));
+};
+module.exports.paymentFailed = async (req, res) => {
+  res.sendFile(path.join(__basedir + "/public/failed.html"));
+};
+module.exports.paymentCancled = async (req, res) => {
+  res.sendFile(path.join(__basedir + "/public/cancled.html"));
 };

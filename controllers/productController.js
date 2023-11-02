@@ -301,3 +301,96 @@ module.exports.filterProducts = async (req, res) => {
 
   return res.status(200).send(products);
 };
+
+
+//RATING FUNCTION FOR ASSIGNMENTS START
+module.exports.rating = async(req,res)=>{
+
+  console.log(req.body);
+  const { _id } = req.user ;
+  const { star,prodId } = req.body ;
+  try{
+const product =await Product.findById(prodId);
+const alreadyRated = product.ratings.find((userId)=> userId.postedBy.toString()=== _id.toString());
+if(alreadyRated){
+const updateRating = await Product.updateOne({
+  ratings:{$elemMatch:alreadyRated} 
+},
+{
+  $set:{"ratings.$.star":star}
+},
+{
+  new:true
+}
+);
+
+}else{
+const rateProduct = await Product.findByIdAndUpdate(prodId,
+  {
+  $push:{
+    ratings:{
+      star:star,
+      postedBy:_id
+    }
+  }
+},
+{
+  new:true
+}).select({photo:0})
+
+
+
+}
+const getAllRatings = await Product.findById(prodId);
+const totalRatings = getAllRatings.ratings.length;
+const ratingSum = getAllRatings.ratings.map(item=>item.star).reduce((prev,curr) => prev + curr,0);
+const actualRating = Math.round(ratingSum/totalRatings);
+const finalProduct = await Product.findByIdAndUpdate(prodId,{
+  totalRating:actualRating
+},
+{new:true}
+).select({photo:0});
+return res.send(finalProduct);
+  }catch(error){
+
+
+  }
+
+} 
+//RATING FUNCTION FOR ASSIGNMENTS END
+
+//COMMENTING FUNCTION STARTS
+module.exports.getComments = async(req,res)=>{
+   const id = req.params.id ;
+const comments = await Product.findById(id).select({comments:1});
+
+return res.status(200).send(comments);
+
+}
+module.exports.postComment = async(req,res)=>{
+const id = req.params.id ;
+const cmnt = req.body.comment ;
+const uId = req.user._id;
+const name = req.user.name;
+
+try{
+  const comment = await Product.findByIdAndUpdate(id,{
+    $push:{
+      comments:{
+      comment:cmnt,
+      postedBy:uId,
+      name:name
+      }
+    }
+  },{
+    new:true
+  }).select({photo:0});
+  return res.status(201).send(comment);
+}catch(error){
+  return res.status(400).send("Something wrong!")
+}
+
+
+}
+
+//COMMENTING FUNCTION ENDS
