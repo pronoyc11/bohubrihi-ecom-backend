@@ -155,11 +155,11 @@ module.exports.getProducts = async (req, res) => {
 //   }
 
   //TESTING ENDS
-let val_id = "2311011857491SQ84DQcpjmxoXg";
+// let val_id = "2311011857491SQ84DQcpjmxoXg";
 
-let response = await axios.get(`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=abc653cf3571418c&store_passwd=abc653cf3571418c@ssl`)
+// let response = await axios.get(`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=abc653cf3571418c&store_passwd=abc653cf3571418c@ssl`)
       
-console.log(response.data["status"]); 
+// console.log(response.data["status"]); 
 
 
 

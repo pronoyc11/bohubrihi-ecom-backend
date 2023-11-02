@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const { BoughtProducts } = require("../models/boughtProducts");
 const { CartItem } = require("../models/cartItem");
 const { Order } = require("../models/order");
