@@ -24,12 +24,12 @@ module.exports.Order = model(
         default:"pending",
         enum:["pending","complete"]
     },
-    time:{type:Date,def:new Date()},
+   ammount:Number,
     user : {
         type:Schema.Types.ObjectId,
         ref:'User'
     },
     sessionKey:String
 
-  })
+  },{timestamps:true})
 );

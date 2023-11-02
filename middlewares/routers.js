@@ -7,6 +7,7 @@ const paymentRouter = require("../routers/paymentRouter");
 const boughtProductRouter = require("../routers/boughtProductRouter");
 const productRatingRouter = require("../routers/productRatingRouter");
 const productCommentRouter = require("../routers/productCommentRouter");
+const discountRouter = require("../routers/discountRouter");
 module.exports = (app)=>{
 
 app.use("/api/profile",profileRouter)
@@ -18,4 +19,5 @@ app.use("/api/payment",paymentRouter);
 app.use("/api/boughtProduct",boughtProductRouter);
 app.use("/api/ratings",productRatingRouter);
 app.use("/api/comments",productCommentRouter);
+app.use("/api/discount",discountRouter);
 }

@@ -12,7 +12,7 @@ module.exports.ipn = async (req, res) => {
   const tran_id = payment["tran_id"];
   //validation starts
   let val_id = payment["val_id"] ;         //"2311011857491SQ84DQcpjmxoXg";
-
+  const amount = payment["amount"];
 let response = await axios.get(`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=abc653cf3571418c&store_passwd=abc653cf3571418c@ssl`)
       
 let sslStatus = response.data["status"]; 
@@ -20,7 +20,8 @@ let sslStatus = response.data["status"];
   if (sslStatus === "VALID" || sslStatus === "VALIDATED") {
     const order = await Order.findOneAndUpdate(
       { transanction_id: tran_id },
-      { status: "complete" }
+      { status: "complete",ammount:amount },
+      {new:true}
     
     );
      await CartItem.deleteMany({user:order.user});
@@ -97,12 +98,18 @@ module.exports.initPayment = async (req, res) => {
   const userId = req.user._id;
   const cartItems = await CartItem.find({ user: userId });
   const profile = await Profile.findOne({ user: userId });
+  const discount = parseInt(req.query.discount) ;
 
   const { address1, address2, city, state, postcode, country, phone } = profile;
-
-  const total_amount = cartItems
+  
+  let total_amount = cartItems
     .map((item) => item.count * item.price)
     .reduce((a, b) => a + b, 0);
+    let countAmmount = total_amount ;
+  if(discount !== 1){
+      let discountAmmount = Math.round(total_amount * (discount/100));
+      countAmmount = total_amount - discountAmmount ;
+  }
   const total_item = cartItems
     .map((item) => item.count)
     .reduce((a, b) => a + b, 0);
@@ -126,7 +133,7 @@ module.exports.initPayment = async (req, res) => {
 
   // Set order details
   payment.setOrderInfo({
-    total_amount: total_amount, // Number field
+    total_amount: countAmmount, // Number field
     currency: "BDT", // Must be three character string
     tran_id: tran_id, //"ref12345667", // Unique Transaction id
     emi_option: 0, // 1 or 0
@@ -149,7 +156,7 @@ module.exports.initPayment = async (req, res) => {
   // Set shipping info
   payment.setShippingInfo({
     method: "Courier", //Shipping method of the order. Example: YES or NO or Courier
-    num_item: 2,
+    num_item: total_item,
     name: req.user.name,
     add1: address1,
     add2: address2,
