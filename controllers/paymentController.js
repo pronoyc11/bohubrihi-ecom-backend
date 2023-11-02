@@ -20,10 +20,10 @@ let sslStatus = response.data["status"];
   if (sslStatus === "VALID" || sslStatus === "VALIDATED") {
     const order = await Order.findOneAndUpdate(
       { transanction_id: tran_id },
-      { status: "complete" },
-      {new:true}
+      { status: "complete" }
+    
     );
-     await CartItem.deleteMany(order.cartItems);
+     await CartItem.deleteMany({user:order.user});
     //Here gose all additional operation for assignment
     
     const orders = await Order.find({transanction_id:tran_id}).select({cartItems:1,user:1});

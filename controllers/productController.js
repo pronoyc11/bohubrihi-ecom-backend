@@ -169,7 +169,7 @@ module.exports.getProducts = async (req, res) => {
 //   { status: "complete" },
   
 // )
-// console.log(orders)
+// console.log(orders.user)
  //await CartItem.deleteMany(order.cartItems);
 
 
