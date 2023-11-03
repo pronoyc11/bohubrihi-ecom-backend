@@ -184,11 +184,12 @@ module.exports.getProducts = async (req, res) => {
   let limit = req.query.limit ? parseInt(req.query.limit) : 10;
   let skip = req.query.skip? parseInt(req.query.skip) : 0 ;
   const products = await Product.find()
+    .limit(limit)
+    .skip(skip)
     .select({ photo: 0, description: 0 })
     .populate("category", "name")
-    .limit(limit)
     .sort({ [sortBy]: order })
-    .skip(skip)
+   
     
 
   return res.status(200).send(products);
@@ -319,12 +320,11 @@ module.exports.filterProducts = async (req, res) => {
     }
   }
 
-  const products = await Product.find(args)
+  const products = await Product.find(args).limit(limit)
+    .skip(skip)
     .select({ photo: 0 })
     .sort({ [sortBy]: order })
-    .populate("category","name _id")
-    .skip(skip)
-    .limit(limit);
+    .populate("category","name _id");
 
   return res.status(200).send(products);
 };
