@@ -27,6 +27,7 @@ module.exports.Product = model(
         {
           star: Number,
           postedBy: { type: Schema.Types.ObjectId, ref: "User" },
+          name:String
         },
       ],
       comments: [

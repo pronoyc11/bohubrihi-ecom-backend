@@ -181,7 +181,7 @@ module.exports.getProducts = async (req, res) => {
 
   let order = req.query.order === "desc" ? -1 : 1;
   let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
-  let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+  let limit = req.query.limit ? parseInt(req.query.limit) : 100;
   let skip = req.query.skip? parseInt(req.query.skip) : 0 ;
   const products = await Product.find()
     .limit(limit)
@@ -304,8 +304,8 @@ module.exports.filterProducts = async (req, res) => {
   
   let order = req.body.order === "desc" ? -1 : 1;
   let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
-  let limit = req.body.limit ? parseInt(req.body.limit) : 10;
-  let skip = parseInt(req.body.skip);
+  let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+  let skip = req.body.skip? parseInt(req.body.skip) : 0;
   let filters = req.body.filters;
   let args = {};
   for (let key in filters) {
@@ -334,7 +334,7 @@ module.exports.filterProducts = async (req, res) => {
 module.exports.rating = async(req,res)=>{
 
   console.log(req.body);
-  const { _id } = req.user ;
+  const { _id,name } = req.user ;
   const { star,prodId } = req.body ;
   try{
 const product =await Product.findById(prodId);
@@ -357,7 +357,8 @@ const rateProduct = await Product.findByIdAndUpdate(prodId,
   $push:{
     ratings:{
       star:star,
-      postedBy:_id
+      postedBy:_id,
+      name:name
     }
   }
 },
@@ -377,7 +378,7 @@ const finalProduct = await Product.findByIdAndUpdate(prodId,{
 },
 {new:true}
 ).select({photo:0});
-return res.send(finalProduct);
+return res.status(200).send(finalProduct);
   }catch(error){
 
 
@@ -412,7 +413,7 @@ try{
   },{
     new:true
   }).select({photo:0});
-  return res.status(201).send(comment);
+  return res.status(200).send(comment);
 }catch(error){
   return res.status(400).send("Something wrong!")
 }

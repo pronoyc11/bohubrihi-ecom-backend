@@ -1,7 +1,7 @@
 const { BoughtProducts } = require("../models/boughtProducts")
 
 module.exports.getBP = async(req,res) =>{
-const products = await BoughtProducts.find();
+const products = await BoughtProducts.findOne({user:req.user._id}).select({products:1});
 if(!products) return res.status(403).send("No bought products found!")
 return res.status(200).send(products);
 
