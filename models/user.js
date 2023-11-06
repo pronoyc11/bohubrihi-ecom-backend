@@ -28,6 +28,12 @@ const userSchema = Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    googleId: {
+      type:String
+    },
+    fbId:{
+      type:String
+    }
   },
   { timestamps: true }
 );

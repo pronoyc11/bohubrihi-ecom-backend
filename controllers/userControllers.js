@@ -46,3 +46,28 @@ module.exports.signIn = async (req, res) => {
 
 
 };
+
+module.exports.googleSignIn = async(req,res)=>{
+  let user = await User.findOne({email:req.body.email});
+
+  if(user){
+    const token = user.genJWT();
+
+    return res.status(200).send({
+        message: "Login successfull",
+        token: token,
+        user: _.pick(user, ["_id", "name", "email"]),
+      })
+  }else{
+    user = new User(_.pick(req.body, ["name", "email", "password"]));
+    const token = user.genJWT();
+    const result = await user.save();
+    return res.status(201).send({
+      message: "Registration successfull",
+      token: token,
+      user: _.pick(result, ["_id", "name", "email"]),
+    });
+  };
+
+  
+}
