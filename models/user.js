@@ -31,7 +31,7 @@ const userSchema = Schema(
     googleId: {
       type:String
     },
-    fbId:{
+    facebookId:{
       type:String
     }
   },

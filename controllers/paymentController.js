@@ -88,7 +88,7 @@ if(bps){
 
   //ADDITIONAL ASSIGNMENT OPERATION ENDS HERE
   } else {
-    await Order.deleteOne({ transaction_id: tran_id });
+    await Order.deleteOne({ transanction_id: tran_id });
   }
   await payment.save();
   return res.status(200).send("IPN");
