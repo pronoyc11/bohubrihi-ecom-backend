@@ -1,5 +1,5 @@
 const { User } = require("../models/user");
-
+import axios from "axios";
 module.exports.postFB = async (req, res) => {
     try {
         const {  userId , accessToken } = req.body;
@@ -46,4 +46,5 @@ let getUserByFacebookIdAndAccessToken = ( accessToken ,userId) => {
     let urlGraphFacebook = `https://graph.facebook.com/v2.11/${userId}?fields=id,name,email&access_token=${accessToken}`;
     let result = axios.get(urlGraphFacebook);
     return result;
+    
 }
