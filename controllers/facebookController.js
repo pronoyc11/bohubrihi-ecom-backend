@@ -1,5 +1,6 @@
 const { User } = require("../models/user");
 const axios = require("axios");
+const _ = require("lodash");
 module.exports.postFB = async (req, res) => {
     try {
         const {  userId , accessToken } = req.body;
