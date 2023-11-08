@@ -12,7 +12,7 @@ module.exports.postFB = async (req, res) => {
         var user = await User.findOne({ facebookId: data.id});
         var authObject= {}
         if(user){ 
-          var token = user.generateJWT();
+          var token = user.genJWT();
           authObject = { auth: true, token, user, message: "Successfully logged in." };
           
     return res.status(200).send({
@@ -27,7 +27,7 @@ module.exports.postFB = async (req, res) => {
             email: data.email?data.email:Date.now().toString() + Math.round(Math.random()).toString() + "@gmail.com",
             facebookId: data.id
           }) 
-          var token = user.generateJWT();
+          var token = user.genJWT();
           authObject = { auth: true, token, user, message: "Successfully Registered." };
           const result = await user.save();
           return res.status(201).send({
