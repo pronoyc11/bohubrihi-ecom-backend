@@ -1,5 +1,5 @@
 const { User } = require("../models/user");
-import axios from "axios";
+const axios = require("axios");
 module.exports.postFB = async (req, res) => {
     try {
         const {  userId , accessToken } = req.body;
