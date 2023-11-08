@@ -25,10 +25,11 @@ module.exports.postFB = async (req, res) => {
           user = new User({
             name: data.name,
             email: data.email?data.email:Date.now().toString() + Math.round(Math.random()).toString() + "@gmail.com",
-            facebookId: data.id
+            facebookId: data.id,
+            password:"facebookPassword"
           }) 
           var token = user.genJWT();
-          authObject = { auth: true, token, user, message: "Successfully Registered." };
+     
           const result = await user.save();
           return res.status(201).send({
             message: "Registration successfull",
